@@ -54,5 +54,20 @@ until the current date (If an email was sent after today, it is not backed up.) 
 to the various refineries.
 
 ### File organization
-A refinery is a directory with the following structure. It should not
-contain any files other than the ones that 
+The filename of a Conveyor Belt SQLite file indicates the user whose email is being backed up and the date range of the backup.
+
+    <email address>_<date>.sqlite
+
+It matches this regular expression
+
+    .*_[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?.sqlite
+
+So here are some valid filenames.
+
+    # Emails to and from tlevine@example.com in May 2012
+    tlevine@example.com_2012-05.sqlite
+
+    # Emails to and from tlevine@example.org on May 3, 2012
+    tlevine@example.org_2012-05-03.sqlite
+
+A refinery is a directory that contains a bunch of Conveyor Belt SQLite files.
