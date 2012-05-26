@@ -71,3 +71,29 @@ So here are some valid filenames.
     tlevine@example.org_2012-05-03.sqlite
 
 A refinery is a directory that contains a bunch of Conveyor Belt SQLite files.
+
+### Querying email
+
+Each SQLite database contains a table called conveyor_belt that looks
+like this.
+
+<table>
+  <thead>
+    <tr>
+      <th></th><th></th><th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td></td><td></td><td></td>
+    </tr>
+  </tbody>
+</table>
+
+It has the following schema.
