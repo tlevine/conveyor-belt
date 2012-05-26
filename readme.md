@@ -1,7 +1,9 @@
 Conveyor Belt
 =====
 
-Conveyor Belt is a script that makes distributed email archival and querying easy and reliable.
+Conveyor Belt is a minimal shell script that makes distributed email archival and querying easy and reliable. More specifically, it moves email from maildir to sqlite files and provides a way of querying many files in parallel.
+
+Because of its simple design, you can run Conveyor Belt on a generic POSIX box (or even a cluster of generic POSIX boxes), and you can expect to be able to retrieve your backup even if you forget that you used Conveyor Belt to create it.
 
 ### Archiving email
 Conveyor Belt converts emails from maildir format into a series of SQLite files. First, edit the configuration file to specify
@@ -45,6 +47,12 @@ And what if you want files sent different places depending on the date?
 Create the various `REFINERIES` directies if they don't exist.
 
 Once that's all configured, run `conveyor-belt save` to perform a backup.
-`conveyor-belt save` retrieves the most recent database (maybe this should be the two most recent, at least for daily, in case the backup happens to be run right at the end of a day and some emails are late)
+`conveyor-belt save` looks through the local directory and finds the two
+most recent dates during which emails were backed up. (Maybe this should be the two most recent, at least for daily, in case the backup happens to be run right at the end of a day and some emails are late).
+Conveyor belt looks for new emails starting on these dates, and proceeds
+until the current date (If an email was sent after today, it is not backed up.) It adds these files to their respective databases and sends them
+to the various refineries.
 
 ### File organization
+A refinery is a directory with the following structure. It should not
+contain any files other than the ones that 
