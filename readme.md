@@ -96,4 +96,19 @@ like this.
   </tbody>
 </table>
 
-It has the following schema.
+It has the following schema
+
+    CREATE TABLE conveyor_belts (
+      from TEXT NOT NULL,
+      to TEXT NOT NULL, 
+      cc TEXT NOT NULL, 
+      bcc TEXT NOT NULL, 
+      subject TEXT NOT NULL,
+      ...
+    )
+
+and these indices
+
+    CREATE INDEX from ON conveyor_belts(from)
+    CREATE INDEX date ON conveyor_belts(date)
+    CREATE INDEX subject ON conveyor_belts(subject)
