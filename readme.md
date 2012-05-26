@@ -147,10 +147,28 @@ Once you've narrowed it down a bit, you might even search the non-indexed
 columns.
 
     conveyor-belt 'SELECT `subject` FROM `e` WHERE (
+      account() = "tlevine@example.com" AND
       `datetime` > "2012-01-02" AND
       `datetime` < "2012-01-07" AND
       `to` LIKE "%mom%" AND
       `body` LIKE "%velociraptors%"
     )'
 
+### Query Output
+By default, queries just return the output of the sqlite3 shell,
+stacked on top of each other by database. (So `ORDER BY` commands may
+yeild surprising orderings.)
 
+You can also have the data come back as an SQLite file, a CSV file or a maildir.
+
+    # Save the output as SQLite to emails_i_sent.sqlite
+    conveyor-belt --as-sqlite emails_i_sent.sqlite \
+      'SELECT * FROM `e` WHERE `from` = "tlevine@example.com"'
+
+    # Save the output as CSV to emails_i_sent.csv
+    conveyor-belt --as-csv emails_i_sent.csv \
+      'SELECT * FROM `e` WHERE `from` = "tlevine@example.com"'
+
+    # Save the output as a maildir in to emails_i_sent
+    conveyor-belt --as-maildir emails_i_sent \
+      'SELECT * FROM `e` WHERE `from` = "tlevine@example.com"'
