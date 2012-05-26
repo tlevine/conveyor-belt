@@ -23,23 +23,28 @@ A simple one `~/.conveyor-belt` looks like this.
     TRUCKLOAD=month
 
 You can get sort of fancy with the `REFINERIES` variable.
-What if you want to send files to another server?
+
+    # If you specify multiple refineries as an array, files will go to the places.
+    REFINERIES=( ~/conveyor-belt-backup /mnt/external-hd/conveyor-belt-backup/ )
+
+You must always specify a local directory, but you may also specify that
+files should be sent to another server.
 
     # If you specify a hostname, files will be sent with scp.
-    REFINERIES=tlevine@thomaslevine.com:~/conveyor-belt-backup
+    REFINERIES=( ~/conveyor-belt-backup thomaslevine.com:~/conveyor-belt-backup/%Y )
 
-What if you want files sent different places depending on the date?
+And what if you want files sent different places depending on the date?
 
     # If you specify date flags (see `man date`), files will be sent
     # different places depending on the date(s) of the contained emails.
     # For example, this will send SQLite files for May 2012 emails to
     # email-2012-05.thomaslevine.com:~/conveyor-belt-backup
     # Note that the date flags are independent of the TRUCKLOAD variable.
-    REFINERIES=tlevine@email-%Y-%m.thomaslevine.com:~/conveyor-belt-backup
+    REFINERIES=( ~/conveyor-belt-backup tlevine@email-%Y-%m.thomaslevine.com:~/conveyor-belt-backup )
 
-    # If you specify multiple refineries as an array, files will go to all the places.
-    REFINERIES=( ~/conveyor-belt-backup thomaslevine.com:~/conveyor-belt-backup/%Y )
+Create the various `REFINERIES` directies if they don't exist.
 
-Second, create 
+Once that's all configured, run `conveyor-belt save` to perform a backup.
+`conveyor-belt save` retrieves the most recent database (maybe this should be the two most recent, at least for daily, in case the backup happens to be run right at the end of a day and some emails are late)
 
-, one file for each year, day or month
+### File organization
