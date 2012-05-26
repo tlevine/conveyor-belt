@@ -74,8 +74,7 @@ A refinery is a directory that contains a bunch of Conveyor Belt SQLite files.
 
 ### Querying email
 
-Each SQLite database contains a table called conveyor_belt that looks
-like this.
+Each SQLite database contains a table called `e` (short for "email") that looks like this.
 
 <table>
   <thead>
@@ -98,7 +97,7 @@ like this.
 
 It has the following schema
 
-    CREATE TABLE conveyor_belts (
+    CREATE TABLE e (
       from TEXT NOT NULL,
       to TEXT NOT NULL, 
       cc TEXT NOT NULL, 
@@ -107,8 +106,51 @@ It has the following schema
       ...
     )
 
-and these indices
+and these indices.
 
-    CREATE INDEX from ON conveyor_belts(from)
-    CREATE INDEX date ON conveyor_belts(date)
-    CREATE INDEX subject ON conveyor_belts(subject)
+    CREATE INDEX from ON e(from)
+    CREATE INDEX datetime ON e(date)
+    CREATE INDEX subject ON e(subject)
+
+And you can query this like any other SQLite database.
+
+But if you run your query through Conveyor Belt, you can query a bunch of them at once. And if you specified multiple refineries, it will balance load across them.
+
+So you could do something like this.
+
+    conveyor-belt 'SELECT * FROM `e`'
+
+You probably don't want to do that though; maybe you select a subset
+based on the indexed columns.
+
+    conveyor-belt 'SELECT `subject` FROM `e` WHERE `to` LIKE "%mom%"'
+
+Remember that the and `datetime` column are is partially expressed
+in the filename; if you subset based on a datetime range, Conveyor Belt
+will skip files that don't correspond to the range.
+
+The database also has a table called `conveyor_belt_parameters`
+that stores the following information.
+
+* Email account that the emails belong to
+* Conveyor Belt directory into which the database was first written
+* Date backup was run, &c. (maybe)
+
+These variables can be conveniently accessed with some special functions
+
+    account() -- The email account
+    cbdir() -- The Conveyor Belt directory
+
+Like the `date` column, the `account()` function result is expressed in the filename; if you subset based on `account()`, Conveyor Belt knows to skip files for other accounts.
+
+Once you've narrowed it down a bit, you might even search the non-indexed
+columns.
+
+    conveyor-belt 'SELECT `subject` FROM `e` WHERE (
+      `datetime` > "2012-01-02" AND
+      `datetime` < "2012-01-07" AND
+      `to` LIKE "%mom%" AND
+      `body` LIKE "%velociraptors%"
+    )'
+
+
